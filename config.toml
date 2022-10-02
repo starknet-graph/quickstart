@@ -1,0 +1,24 @@
+[store]
+
+[store.primary]
+connection = "postgresql://graph-node:let-me-in@postgres:5432/graph-node"
+pool_size = 10
+
+[chains]
+ingestor = "default"
+
+[chains.starknet-mainnet]
+shard = "primary"
+protocol = "starknet"
+
+[[chains.starknet-mainnet.provider]]
+label = "starknet-mainnet-0"
+
+[chains.starknet-mainnet.provider.details]
+type = "firehose"
+url = "http://firehose:18015"
+
+[deployment]
+
+[[deployment.rule]]
+indexers = ["default"]

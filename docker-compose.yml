@@ -22,7 +22,7 @@ services:
       - "./data/postgres:/var/lib/postgresql/data"
 
   firehose-reader:
-    image: "starknet/firestark:0.2.0-pathfinder-0.8.1"
+    image: "starknet/firestark:0.2.0-pathfinder-0.9.2"
     user: "root"
     command:
       - "--config-file"

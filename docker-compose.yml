@@ -22,7 +22,7 @@ services:
       - "./data/postgres:/var/lib/postgresql/data"
 
   firehose-reader:
-    image: "starknet/firestark:0.2.0-pathfinder-0.9.2"
+    image: "starknet/firestark:0.2.1-pathfinder-0.9.5"
     user: "root"
     command:
       - "--config-file"
@@ -40,7 +40,7 @@ services:
       - "./data/pathfinder:/pathfinder-data"
 
   firehose-merger:
-    image: "starknet/firestark:0.2.0"
+    image: "starknet/firestark:0.2.1"
     command:
       - "--config-file"
       - ""
@@ -54,7 +54,7 @@ services:
       - "./data/firehose:/firehose-data"
 
   firehose-relayer:
-    image: "starknet/firestark:0.2.0"
+    image: "starknet/firestark:0.2.1"
     command:
       - "--config-file"
       - ""
@@ -70,7 +70,7 @@ services:
       - "firehose-reader"
 
   firehose:
-    image: "starknet/firestark:0.2.0"
+    image: "starknet/firestark:0.2.1"
     command:
       - "--config-file"
       - ""

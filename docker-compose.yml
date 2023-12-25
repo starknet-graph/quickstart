@@ -34,7 +34,7 @@ services:
       - "--reader-node-path"
       - "pathfinder"
       - "--reader-node-arguments"
-      - "--data-directory /pathfinder-data --ethereum.url ${ETHEREUM_URL} --poll-pending true"
+      - "--data-directory /pathfinder-data --ethereum.url ${ETHEREUM_URL}"
     volumes:
       - "./data/firehose:/firehose-data"
       - "./data/pathfinder:/pathfinder-data"

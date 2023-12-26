@@ -45,6 +45,12 @@ Make sure you're in the repo. Fire up all the services with:
 $ docker compose up -d
 ```
 
+> [!NOTE]
+>
+> The default `docker-compose.yml` file uses [`pathfinder`](https://github.com/starknet-graph/pathfinder). Alternatively, you can use [`juno`](https://github.com/starknet-graph/juno) by replacing the `docker-compose.yml` file with `docker-compose.juno.yml`.
+>
+> Note that `juno` only works with WebSocket RPC, so the `ETHEREUM_URL` value must also be set to a WebSocket URL.
+
 A new `data` folder will be created in the current directory containing all the data persisted by the system.
 
 Check `graph-node` log to see if there's any error:

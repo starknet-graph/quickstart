@@ -1,0 +1,107 @@
+version: "3.8"
+services:
+  ipfs:
+    image: "ipfs/kubo:v0.15.0"
+    ports:
+      - "5001:5001"
+    volumes:
+      - "./data/ipfs:/data/ipfs"
+
+  postgres:
+    image: "postgres:14"
+    command:
+      - "postgres"
+      - "-cshared_preload_libraries=pg_stat_statements"
+    environment:
+      POSTGRES_USER: "graph-node"
+      POSTGRES_PASSWORD: "let-me-in"
+      POSTGRES_DB: "graph-node"
+      POSTGRES_INITDB_ARGS: "--locale=C --encoding=UTF-8"
+      PGDATA: "/data/postgres"
+    volumes:
+      - "./data/postgres:/var/lib/postgresql/data"
+
+  firehose-reader:
+    image: "starknet/firestark:0.2.1-juno-0.8.1"
+    user: "root"
+    command:
+      - "--config-file"
+      - ""
+      - "start"
+      - "reader-node"
+      - "--common-one-block-store-url"
+      - "file:///firehose-data/storage/one-blocks"
+      - "--reader-node-path"
+      - "juno"
+      - "--reader-node-arguments"
+      - "--db-path /juno-data --eth-node ${ETHEREUM_URL} --network mainnet"
+    volumes:
+      - "./data/firehose:/firehose-data"
+      - "./data/juno:/juno-data"
+
+  firehose-merger:
+    image: "starknet/firestark:0.2.1"
+    command:
+      - "--config-file"
+      - ""
+      - "start"
+      - "merger"
+      - "--common-one-block-store-url"
+      - "file:///firehose-data/storage/one-blocks"
+      - "--common-merged-blocks-store-url"
+      - "file:///firehose-data/storage/merged-blocks"
+    volumes:
+      - "./data/firehose:/firehose-data"
+
+  firehose-relayer:
+    image: "starknet/firestark:0.2.1"
+    command:
+      - "--config-file"
+      - ""
+      - "start"
+      - "relayer"
+      - "--common-one-block-store-url"
+      - "file:///firehose-data/storage/one-blocks"
+      - "--relayer-source"
+      - "firehose-reader:10010"
+    volumes:
+      - "./data/firehose:/firehose-data"
+    depends_on:
+      - "firehose-reader"
+
+  firehose:
+    image: "starknet/firestark:0.2.1"
+    command:
+      - "--config-file"
+      - ""
+      - "start"
+      - "firehose"
+      - "--common-one-block-store-url"
+      - "file:///firehose-data/storage/one-blocks"
+      - "--common-merged-blocks-store-url"
+      - "file:///firehose-data/storage/merged-blocks"
+      - "--common-live-blocks-addr"
+      - "firehose-relayer:10014"
+    volumes:
+      - "./data/firehose:/firehose-data"
+    depends_on:
+      - "firehose-relayer"
+
+  graph-node:
+    image: "starknet/graph-node:nightly"
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8020:8020"
+      - "8030:8030"
+      - "8040:8040"
+    environment:
+      GRAPH_LOG: "info"
+      GRAPH_NODE_CONFIG: "/config.toml"
+      ipfs: "ipfs:5001"
+    volumes:
+      - "./config.toml:/config.toml:ro"
+    depends_on:
+      - "ipfs"
+      - "postgres"
+      - "firehose"

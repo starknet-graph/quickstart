@@ -22,7 +22,7 @@ services:
       - "./data/postgres:/var/lib/postgresql/data"
 
   firehose-reader:
-    image: "starknet/firestark:0.2.1-juno-0.11.4"
+    image: "starknet/firestark:0.2.3-juno-0.11.4"
     user: "root"
     command:
       - "--config-file"
@@ -40,7 +40,7 @@ services:
       - "./data/juno:/juno-data"
 
   firehose-merger:
-    image: "starknet/firestark:0.2.1"
+    image: "starknet/firestark:0.2.3"
     command:
       - "--config-file"
       - ""
@@ -54,7 +54,7 @@ services:
       - "./data/firehose:/firehose-data"
 
   firehose-relayer:
-    image: "starknet/firestark:0.2.1"
+    image: "starknet/firestark:0.2.3"
     command:
       - "--config-file"
       - ""
@@ -70,7 +70,7 @@ services:
       - "firehose-reader"
 
   firehose:
-    image: "starknet/firestark:0.2.1"
+    image: "starknet/firestark:0.2.3"
     command:
       - "--config-file"
       - ""

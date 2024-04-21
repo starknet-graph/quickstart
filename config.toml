@@ -17,6 +17,7 @@ label = "starknet-mainnet-0"
 [chains.starknet-mainnet.provider.details]
 type = "firehose"
 url = "http://firehose:10015"
+features = ["filters"]
 
 [deployment]
 
